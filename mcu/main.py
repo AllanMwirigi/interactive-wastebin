@@ -3,9 +3,9 @@ from gpiozero import MotionSensor, LED
 from signal import pause
 
 # gpiozero always uses BCM
-
+# NOTE: PIR sensor has 1min initialization period on startup
 pir = MotionSensor(4)
-red = LED(19)
+# red = LED(19)
 
 # A function to detect motion
 def on_motion():
@@ -18,7 +18,7 @@ def no_motion():
         # red.on()
 
 pir.when_motion = on_motion
-# pir.when_no_motion = no_motion
+pir.when_no_motion = no_motion
 
 pause() # The process sleeps until a signal is received. And then the signal handler is called.
 # investigate whether app terminates once first signal is received i.e. motion detected
