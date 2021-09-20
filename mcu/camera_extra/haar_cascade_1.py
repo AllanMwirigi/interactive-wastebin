@@ -3,6 +3,8 @@ import cv2 as cv
 import os
 import argparse
 
+# from opencv
+
 def detectAndDisplay(frame):
     frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     frame_gray = cv.equalizeHist(frame_gray)

@@ -23,7 +23,7 @@ while(True):
     ret, frame = cap.read()
 
     # resizing for faster detection
-    frame = cv2.resize(frame, (640, 480))
+    # frame = cv2.resize(frame, (640, 480))
     # using a greyscale picture, also for faster detection
     gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
 
