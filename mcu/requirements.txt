@@ -1,3 +1,6 @@
 colorzero==2.0
-gpiozero==1.6.2
+imagezmq==1.1.1
+imutils==0.5.4
+numpy==1.21.2
 pygame==2.0.1
+pyzmq==22.3.0
