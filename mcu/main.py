@@ -3,6 +3,7 @@ from gpiozero import MotionSensor, LED
 from signal import pause
 import threading
 import ultrasonic
+import audio
 
 # gpiozero always uses BCM
 # NOTE: PIR sensor has 1min initialization period on startup
@@ -10,18 +11,22 @@ pir = MotionSensor(4)
 # red = LED(19)
 
 motion_detected = False
+audioThread = threading.Thread(target=audio.play, daemon=True)
+# print("Audio thread alive", audioThread.is_alive)
 
 # A function to detect motion
 def on_motion():
-        motion_detected = True
-        print('Motion detected!')
-        # red.off()
+    motion_detected = True
+    print('Motion detected!')
+    # red.off()
+    if not audioThread.is_alive():
+        audioThread.start()
 
 # A function when no motion is detected
 def no_motion():
-        motion_detected = False
-        # print('No motion detected')
-        # red.on()
+    motion_detected = False
+    # print('No motion detected')
+    # red.on()
 
 pir.when_motion = on_motion
 pir.when_no_motion = no_motion
