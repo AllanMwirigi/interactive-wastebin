@@ -8,6 +8,7 @@ import imagezmq
 import argparse
 import imutils
 import cv2
+
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-p", "--prototxt", required=False, default="/media/allan/SharedVolume/Edx/5th Year/Project/InteractiveWasteBin/mcu/camera/models/MobileNetSSD_deploy.prototxt",
@@ -125,8 +126,10 @@ while True:
 	montages = build_montages(frameDict.values(), (w, h), (mW, mH))
 	# display the montage(s) on the screen
 	for (i, montage) in enumerate(montages):
-		cv2.imshow("Home pet location monitor ({})".format(i),
+		cv2.imshow("Interactive WasteBin Feed ({})".format(i),
 			montage)
+	# TODO: send the frames to the web client via WebRTC; no need to display as above
+	
 	# detect any kepresses
 	key = cv2.waitKey(1) & 0xFF
 
