@@ -1,24 +1,38 @@
 from gpiozero import MotionSensor, LED
 #from time import sleep, time
 from signal import pause
+import threading
+import ultrasonic
 
 # gpiozero always uses BCM
 # NOTE: PIR sensor has 1min initialization period on startup
 pir = MotionSensor(4)
 # red = LED(19)
 
+motion_detected = False
+
 # A function to detect motion
 def on_motion():
+        motion_detected = True
         print('Motion detected!')
         # red.off()
 
 # A function when no motion is detected
 def no_motion():
-        print('No motion detected')
+        motion_detected = False
+        # print('No motion detected')
         # red.on()
 
 pir.when_motion = on_motion
 pir.when_no_motion = no_motion
 
-pause() # The process sleeps until a signal is received. And then the signal handler is called.
-# investigate whether app terminates once first signal is received i.e. motion detected
+# ultrasonic sensor will operaton a separate thread
+# x = threading.Thread(target=thread_function, args=(1,)) # When you create a Thread, you pass it a function and a list containing the arguments to that function. In this case, you’re telling the Thread to run thread_function() and to pass it 1 as an argument.
+ultrasonicThread = threading.Thread(target=ultrasonic.computeVolume, daemon=True) # daemon indicates that the thread will be killed when main terminates
+ultrasonicThread.start()
+# ultrasonicThread.join() # the main thread will pause and wait for this thread to complete running.
+
+pause() # The process sleeps until a signal is received (motion detected). And then the signal handler is called.
+# otherwise the app will terminate if there is nothing following here
+
+# https://realpython.com/intro-to-python-threading/

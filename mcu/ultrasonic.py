@@ -2,10 +2,12 @@ from gpiozero import DistanceSensor
 from time import sleep
 
 sensor = DistanceSensor(echo=18, trigger=17)
-# TODO: should get an average of a number of measurements to account for the inconsistent values that come up occassionally
-while True:
-    print('Distance: ', sensor.distance * 100, 'cm')
-    sleep(1)
+# TODO: should get an average of a number of measurements before sending, to account for the inconsistent values that come up occassionally
+
+def computeVolume():
+    while True:
+        print('Distance: ', sensor.distance * 100, 'cm')
+        sleep(1)
 
 # import RPi.GPIO as GPIO
 # import time
