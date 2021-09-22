@@ -7,8 +7,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-server_ip = os.getenv("server_ip")
-environment = os.getenv("environment")
+server_ip = os.getenv("SERVER_IP")
+environment = os.getenv("ENVIRONMENT")
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser() 
