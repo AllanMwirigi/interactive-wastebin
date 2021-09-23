@@ -7,7 +7,7 @@ sensor = DistanceSensor(echo=18, trigger=17)
 def computeVolume():
     while True:
         print('Distance: ', sensor.distance * 100, 'cm')
-        sleep(1)
+        sleep(2)
 
 # import RPi.GPIO as GPIO
 # import time
