@@ -36,8 +36,9 @@ while True:
 	# read the frame from the camera and send it to the server
 	frame = vs.read()
     # frame = imutils.resize(frame, width=320)
-	sender.send_image(rpiName, frame)
-
-	# TODO: could use the same approach to receive the result of detion from the cam_server
+	result = sender.send_image(rpiName, frame)
+	# count = int(result.decode())
+	# if count > 1:
+	# 	print('result: ', count, ' detected')
 
 # https://www.pyimagesearch.com/2019/04/15/live-video-streaming-over-network-with-opencv-and-imagezmq/

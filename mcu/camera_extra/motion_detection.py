@@ -1,4 +1,5 @@
 # https://www.pyimagesearch.com/2019/09/02/opencv-stream-video-to-web-browser-html-page/
+# https://blog.miguelgrinberg.com/post/video-streaming-with-flask/page/10
 # https://www.pyimagesearch.com/2019/04/15/live-video-streaming-over-network-with-opencv-and-imagezmq/
 # https://www.pyimagesearch.com/2017/09/11/object-detection-with-deep-learning-and-opencv/
 # https://github.com/robmarkcole/object-detection-app/tree/master/model

@@ -64,7 +64,9 @@ while True:
 	# receive RPi name and frame from the RPi and acknowledge
 	# the receipt
 	(rpiName, frame) = imageHub.recv_image()
+
 	imageHub.send_reply(b'OK')
+
 	# if a device is not in the last active dictionary then it means
 	# that its a newly connected device
 	if rpiName not in lastActive.keys():
@@ -110,7 +112,7 @@ while True:
 				# draw the bounding box around the detected object on
 				# the frame
 				cv2.rectangle(frame, (startX, startY), (endX, endY),
-					(255, 0, 0), 2)
+					(0, 255, 0), 2)
 
     # draw the sending device name on the frame
 	cv2.putText(frame, rpiName, (10, 25),
@@ -119,7 +121,7 @@ while True:
 	label = ", ".join("{}: {}".format(obj, count) for (obj, count) in
 		objCount.items())
 	cv2.putText(frame, label, (10, h - 20),
-		cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255,0), 2)
+		cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0,0), 2)
 	# update the new frame in the frame dictionary
 	frameDict[rpiName] = frame
 	# build a montage using images in the frame dictionary
@@ -132,6 +134,9 @@ while True:
 	
 	# detect any kepresses
 	key = cv2.waitKey(1) & 0xFF
+
+	# reply = "{}".format(objCount['person'])
+	# imageHub.send_reply(reply.encode())
 
     	# if current time *minus* last time when the active device check
 	# was made is greater than the threshold set then do a check
