@@ -76,7 +76,7 @@ const connOptions = {
 };
 
 try {
-  mongoose.connect(process.env.MONGO_URI, connOptions);
+  mongoose.connect(process.env.DB_URI, connOptions);
 } catch (error) {
   logger.error(`Mongoose | ${error.message}`);
 }
