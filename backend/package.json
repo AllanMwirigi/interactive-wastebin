@@ -1,0 +1,29 @@
+{
+  "name": "interactive-wastebin",
+  "version": "0.0.1",
+  "description": "Backend for Interactive WasteBin project",
+  "main": "app.js",
+  "repository": "https://github.com/AllanMwirigi/interactive-wastebin.git",
+  "author": "Allan Mwirigi",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "node index.js",
+    "start:dev": "NODE_ENV=development nodemon index.js"
+  },
+  "dependencies": {
+    "axios": "^0.21.4",
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.7",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.6.5",
+    "socket.io": "4.2.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  }
+}
