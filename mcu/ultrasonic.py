@@ -4,10 +4,21 @@ from time import sleep
 sensor = DistanceSensor(echo=18, trigger=17)
 # TODO: should get an average of a number of measurements before sending, to account for the inconsistent values that come up occassionally
 
-def computeVolume():
-    while True:
-        print('Distance: ', sensor.distance * 100, 'cm')
-        sleep(2)
+def computeHeight():
+    # print('Starting ultrasonic')
+    counter = 0
+    measured = None
+    while counter < 7:
+        value = sensor.distance * 100
+        print('Distance: ', value, 'cm')
+        if value > 0 and value < 95: # weird values that come up sometimes
+            measured = value
+            counter += 1
+        sleep(1)
+    
+    if measured is not None:
+        print('Ultrasonic Height: ', measured, 'cm')
+        # TODO: send to backend
 
 # import RPi.GPIO as GPIO
 # import time
