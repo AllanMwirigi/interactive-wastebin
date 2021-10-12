@@ -1,6 +1,6 @@
 {
   "name": "interactive-wastebin",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Backend for Interactive WasteBin project",
   "main": "app.js",
   "repository": "https://github.com/AllanMwirigi/interactive-wastebin.git",

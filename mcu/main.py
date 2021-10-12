@@ -38,7 +38,7 @@ pir.when_motion = on_motion
 
 tl = Timeloop()
 
-@tl.job(interval=timedelta(minutes=2))
+@tl.job(interval=timedelta(minutes=0.5))
 def compute_height_every_2min():
     ultrasonic.computeHeight()
 

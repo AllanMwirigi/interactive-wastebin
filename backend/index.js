@@ -36,7 +36,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/v1/users', userRoutes);
 // eslint-disable-next-line no-use-before-define
 app.use('/api/v1/bins', auth, binRoutes, emitEvent);
-app.use('/api/v1', userRoutes); // to allow POST /login route
+// app.use('/api/v1', userRoutes); // to allow POST /login route
 
 // any invalid endpoints that don't match the above are handled here
 app.use((req, res, next) => {
