@@ -1,5 +1,5 @@
-import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 
 // components
 
@@ -11,7 +11,24 @@ import FooterSmall from "components/Footers/FooterSmall.js";
 import Login from "views/auth/Login.js";
 import Register from "views/auth/Register.js";
 
+
 export default function Auth() {
+
+  const history = useHistory()
+
+  // useEffect hook replaces componentDidMount, componentDidUpdate and componentWillUnmount
+  // https://reactjs.org/docs/hooks-effect.html
+  /* To run the hook only once we can use the second argument to useEffect — an array of values 
+      that the effect depends on. By default, the effect will run when any of the props or state 
+      changes. If we pass an empty array, the effect will only run on first render.
+  */
+  useEffect(() => {
+    // TODO: https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook
+    const token = sessionStorage.getItem('authToken')
+    console.log('authToken:Auth', token)
+    if (token) history.push('/admin')
+  }, [])
+
   return (
     <>
       <Navbar transparent />

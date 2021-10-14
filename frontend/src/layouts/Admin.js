@@ -1,5 +1,5 @@
-import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 
 // components
 
@@ -16,6 +16,16 @@ import Settings from "views/admin/Settings.js";
 import Tables from "views/admin/Tables.js";
 
 export default function Admin() {
+
+  const history = useHistory()
+
+  useEffect(() => {
+    // TODO: https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook
+    const token = sessionStorage.getItem('authToken')
+    console.log('authToken:Admin', token)
+    if (!token) history.push('/auth')
+  }, [])
+
   return (
     <>
       <Sidebar />
