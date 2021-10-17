@@ -1,5 +1,5 @@
 
-const Bin = require('../models/Bin');
+const Bin = require('./Bin');
 const { sendEmail } = require('../utils/email');
 
 exports.createBin = async (req, res, next) => {

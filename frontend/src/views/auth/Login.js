@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { signInService } from '../../services/services';
 
 export default function Login() {
   const [emailInp, setEmailInp] = useState("");
   const [passwordInp, setPasswordInp] = useState("");
   const [requestPending, setRequestPending] = useState(false);
+  const routerHistory = useHistory()
 
   const submit = async (event) => {
-    console.log('here')
     event.preventDefault();
     if(emailInp.trim().length === 0 || passwordInp.trim().length === 0) {
       alert('Fill in all fields');
@@ -16,13 +16,15 @@ export default function Login() {
     }
     setRequestPending(true);
     try {
-      const response = await signInService.signIn(emailInp, passwordInp);
+      const response = await signInService.logIn(emailInp, passwordInp);
+      sessionStorage.setItem('authToken', response.data.token)
       setRequestPending(false);
-      // props.setSignedIn(true);
+      routerHistory.push('/admin')
     } catch (error) {
       if (error?.response?.status === 401) {
         alert('Invalid credentials');
       } else {
+        console.log('login error', error)
         alert('An error occurred');
       }
       setRequestPending(false);

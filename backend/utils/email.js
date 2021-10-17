@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const logger = require('./winston');
-const User = require('../models/User');
+const User = require('../user/User');
 
 const emailName = process.env.EMAIL_NAME;
 const emailPass = process.env.EMAIL_PASS;

@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config('../.env');
 
-const User = require('../models/User');
+const User = require('./User');
 
 const saltRounds = 10; // number of salting rounds for bcrypt password hash
 
@@ -14,16 +14,14 @@ const signup = (req, res, next) => {
     .hash(password, saltRounds)
     .then((hash) => {
       // new user details
-      const user = new User({
-        email,
-        name,
-        password: hash
-      });
+      const user = new User({ email, name, password: hash });
       // attempt to save user in database
-      user
-        .save()
+      user.save()
         // response returned after successfully saving user in database
-        .then(() => res.status(201).json({ code: 201, message: 'user successfully created' }))
+        .then(() => {
+          const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET, { expiresIn: '24h' }); 
+          res.status(201).json({ code: 201, message: 'user successfully created', token })
+        })
         .catch((err) => {
           // in case of any error when saving user in database
           // we channel the error to the error handler in app.js
@@ -45,12 +43,7 @@ const login = (req, res, next) => {
     .then((user) => {
       // if user is not found
       if (!user) {
-        return res
-          .status(401)
-          .json({
-            coed: 401,
-            message: 'user not found'
-          });
+        return res.status(401).json({ code: 401, message: 'user not found' });
       }
 
       bcrypt
@@ -59,12 +52,7 @@ const login = (req, res, next) => {
           // if compare returns false
           // it implies provided password is incorrect
           if (!valid) {
-            return res
-              .status(401)
-              .json({
-                code: 401,
-                message: 'incorrect password'
-              });
+            return res.status(401).json({ code: 401, message: 'incorrect password' });
           }
 
           // else if compare returns true
@@ -73,14 +61,7 @@ const login = (req, res, next) => {
           const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET, { expiresIn: '24h' });
           return res
             .status(200)
-            .json({
-              code: 200,
-              message: 'login successful',
-              // eslint-disable-next-line no-underscore-dangle
-              id: user._id,
-              username: user.username,
-              token
-            });
+            .json({ code: 200, message: 'login successful', id: user._id, username: user.username, token });
         })
         .catch((err) => {
           next(err); // channel errors to logger in app.js
@@ -97,21 +78,11 @@ const updateUser = (req, res, next) => {
   bcrypt
     .hash(req.body.password, saltRounds)
     .then((hash) => {
-      user = {
-        _id: req.params.id,
-        email: req.body.email,
-        username: req.body.email,
-        password: hash
-      }; // updated user attributes
+      user = { _id: req.params.id, email: req.body.email, username: req.body.email, password: hash }; // updated user attributes
 
       User
         .updateOne({ _id: req.params.id }, user)
-        .then(() => res
-          .status(201)
-          .json({
-            message: 'user successfully updated',
-            code: 201
-          }))
+        .then(() => res.status(201).json({ message: 'user successfully updated', code: 201 }))
         .catch((err) => {
           next(err); // channel error to error handler
         });
@@ -124,12 +95,7 @@ const updateUser = (req, res, next) => {
 const deleteUser = (req, res, next) => {
   User
     .deleteOne({ _id: req.params.id })
-    .then(() => res
-      .status(201)
-      .json({
-        message: 'user successfully deleted',
-        code: 201
-      }))
+    .then(() => res.status(201).json({ message: 'user successfully deleted', code: 201 }))
     .catch((error) => {
       next(error); // channel error to error handler in app.js
     });

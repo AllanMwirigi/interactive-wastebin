@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const http = require('http');
 const socketio = require('socket.io');
+const cors = require('cors')
 const path = require('path');
 // const compression = require('compression');
 require('dotenv').config();
@@ -16,17 +17,17 @@ const { sendEmail } = require('./utils/email');
 
 let originsList;
 if (process.env.NODE_ENV === 'development') {
-  originsList = ["http://localhost:4200"];
+  originsList = ["http://localhost:3000"];
   app.use(morgan('dev'));
 } else {
-  originsList = ["https://uzapap.surge.sh"]; // TODO: add prod url here
+  originsList = []; // TODO: add prod url here
 }
 // set up cors
 const corsOptions = {
   origin: originsList
   // optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // gzip compress response body
@@ -68,15 +69,8 @@ app.use((err, req, res, next) => {
   logger.error(`${req.url} | ${err.message}`);
 });
 
-const connOptions = {
-  useNewUrlParser: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-  useUnifiedTopology: true
-};
-
 try {
-  mongoose.connect(process.env.DB_URI, connOptions);
+  mongoose.connect(process.env.DB_URI);
 } catch (error) {
   logger.error(`Mongoose | ${error.message}`);
 }
