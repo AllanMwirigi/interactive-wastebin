@@ -1,7 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { signInService } from '../../services/services';
 
 export default function Login() {
+  const [emailInp, setEmailInp] = useState("");
+  const [passwordInp, setPasswordInp] = useState("");
+  const [requestPending, setRequestPending] = useState(false);
+
+  const submit = async (event) => {
+    console.log('here')
+    event.preventDefault();
+    if(emailInp.trim().length === 0 || passwordInp.trim().length === 0) {
+      alert('Fill in all fields');
+      return;
+    }
+    setRequestPending(true);
+    try {
+      const response = await signInService.signIn(emailInp, passwordInp);
+      setRequestPending(false);
+      // props.setSignedIn(true);
+    } catch (error) {
+      if (error?.response?.status === 401) {
+        alert('Invalid credentials');
+      } else {
+        alert('An error occurred');
+      }
+      setRequestPending(false);
+    }
+  }
   return (
     <>
       <div className="container mx-auto px-4 h-full">
@@ -44,7 +70,7 @@ export default function Login() {
                 {/* <div className="text-blueGray-400 text-center mb-3 font-bold">
                   <small>Or sign in with credentials</small>
                 </div> */}
-                <form>
+                <form onSubmit={e => submit(e) }>
                   <div className="relative w-full mb-3">
                     <label
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -55,7 +81,7 @@ export default function Login() {
                     <input
                       type="email"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Email"
+                      placeholder="Email" value={emailInp} onChange={(e) => setEmailInp(e.currentTarget.value) }
                     />
                   </div>
 
@@ -69,7 +95,7 @@ export default function Login() {
                     <input
                       type="password"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Password"
+                      placeholder="Password" value={passwordInp} onChange={(e) => setPasswordInp(e.currentTarget.value) }
                     />
                   </div>
                   {/* <div>
@@ -86,12 +112,12 @@ export default function Login() {
                   </div> */}
 
                   <div className="text-center mt-6">
-                    <button
+                    { !requestPending && <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                      type="button"
                     >
                       Sign In
-                    </button>
+                    </button> }
+                    { requestPending && <span className="txt3">Please wait...</span> }
                   </div>
                 </form>
               </div>

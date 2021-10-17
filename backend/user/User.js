@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // specify attributes of a user and constraints on the attributes
 const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
-  username: { type: String, required: true, unique: true },
+  name: { type: String },
   password: { type: String, required: true }
 });
 
