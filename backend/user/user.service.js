@@ -72,6 +72,15 @@ const login = (req, res, next) => {
     });
 };
 
+const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find({}).select('-password').lean().exec();
+    res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+}
+
 const updateUser = (req, res, next) => {
   let user = new User({ _id: req.params.id }); // instantiate user with corresponding user _id
 
@@ -104,6 +113,7 @@ const deleteUser = (req, res, next) => {
 module.exports = {
   signup,
   login,
+  getAllUsers,
   updateUser,
   deleteUser
 };

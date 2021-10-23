@@ -10,6 +10,10 @@ export default function HeaderStats(props) {
   if (props.binCount > -1) {
     binCount = props.binCount.toString();
   }
+  let userCount = "N/A";
+  if (props.userCount > -1) {
+    userCount = props.userCount.toString();
+  }
 
   return (
     <>
@@ -33,6 +37,18 @@ export default function HeaderStats(props) {
               </div>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
+                    statSubtitle="USERS"
+                    statTitle={userCount}
+                    statArrow="down"
+                    statPercent="1.10"
+                    statPercentColor="text-orange-500"
+                    statDescripiron="Since yesterday"
+                    statIconName="fas fa-users"
+                    statIconColor="bg-pink-500"
+                  />
+              </div>
+              {/* <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
+                <CardStats
                   statSubtitle="NEW USERS"
                   statTitle="2,356"
                   statArrow="down"
@@ -41,18 +57,6 @@ export default function HeaderStats(props) {
                   statDescripiron="Since last week"
                   statIconName="fas fa-chart-pie"
                   statIconColor="bg-orange-500"
-                />
-              </div>
-              <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
-                <CardStats
-                  statSubtitle="SALES"
-                  statTitle="924"
-                  statArrow="down"
-                  statPercent="1.10"
-                  statPercentColor="text-orange-500"
-                  statDescripiron="Since yesterday"
-                  statIconName="fas fa-users"
-                  statIconColor="bg-pink-500"
                 />
               </div>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
@@ -66,7 +70,7 @@ export default function HeaderStats(props) {
                   statIconName="fas fa-percent"
                   statIconColor="bg-lightBlue-500"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

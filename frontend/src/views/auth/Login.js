@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { signInService } from '../../services/services';
+import { UserService } from '../../services/services';
 
 export default function Login() {
   const [emailInp, setEmailInp] = useState("");
   const [passwordInp, setPasswordInp] = useState("");
   const [requestPending, setRequestPending] = useState(false);
-  const routerHistory = useHistory()
+  const routerHistory = useHistory();
+  let userService = useRef();
+
+  useEffect(() => {
+    // TODO: https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook
+    userService.current = new UserService(); // no need for authorization for login
+  }, [])
 
   const submit = async (event) => {
     event.preventDefault();
@@ -16,7 +22,7 @@ export default function Login() {
     }
     setRequestPending(true);
     try {
-      const response = await signInService.logIn(emailInp, passwordInp);
+      const response = await userService.current.login(emailInp, passwordInp);
       sessionStorage.setItem('authToken', response.data.token)
       sessionStorage.setItem('userId', response.data.userId);
       setRequestPending(false);
@@ -25,7 +31,7 @@ export default function Login() {
       if (error?.response?.status === 401) {
         alert('Invalid credentials');
       } else {
-        console.log('login error', error)
+        console.error('login error', error)
         alert('An error occurred');
       }
       setRequestPending(false);

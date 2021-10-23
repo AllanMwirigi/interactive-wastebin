@@ -15,11 +15,13 @@ import Maps from "views/admin/Maps.js";
 import Settings from "views/admin/Settings.js";
 import Tables from "views/admin/Tables.js";
 import { BinsService } from "services/services";
+import { UserService } from "services/services";
 
 export default function Admin() {
 
   const history = useHistory();
   const [binCount, setBinCount] = useState(-1);
+  const [userCount, setUserCount] = useState(-1);
   /**
    * NOTE: a functional component does not have a render function, the component itself, with everything defined in it being 
    * the render function which returns a JSX in the end. 
@@ -31,6 +33,7 @@ export default function Admin() {
   // let refCount = useRef(0); // gives the same ref object on every render; last value will be mainttained across re-render
 
   let binService = useRef();
+  let userService = useRef();
 
   useEffect(() => {
     // TODO: https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook
@@ -41,19 +44,22 @@ export default function Admin() {
       return;
     }
     binService.current = new BinsService(authToken, userId);
-    fetchBins();
+    userService.current = new UserService(authToken, userId);
+    fetchData();
   }, [])
 
-  const fetchBins = async () => {
+  const fetchData = async () => {
     try {
       const res1 = await binService.current.getAllBins();
       const binsList = res1.data;
       setBinCount(binsList.length);
+      const res2 = await userService.current.getAllUsers();
+      const userList = res2.data;
+      setUserCount(userList.length);
     } catch (error) {
-      alert('An error occurred fetching data');
       console.error(error);
-    }
-    
+      alert('An error occurred fetching data');
+    } 
   }
 
   return (
@@ -62,7 +68,7 @@ export default function Admin() {
       <div className="relative md:ml-64 bg-blueGray-100">
         <AdminNavbar />
         {/* Header */}
-        <HeaderStats binCount={binCount} />
+        <HeaderStats binCount={binCount} userCount={userCount} />
         <div className="px-4 md:px-10 mx-auto w-full -m-24">
           <Switch>
             <Route path="/admin/dashboard" exact component={Dashboard} />
