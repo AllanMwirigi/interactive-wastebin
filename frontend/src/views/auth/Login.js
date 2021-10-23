@@ -23,10 +23,10 @@ export default function Login() {
     setRequestPending(true);
     try {
       const response = await userService.current.login(emailInp, passwordInp);
-      sessionStorage.setItem('authToken', response.data.token)
-      sessionStorage.setItem('userId', response.data.userId);
+      sessionStorage.setItem('authToken', response.data.token);
+      sessionStorage.setItem('userData', JSON.stringify(response.data.userData));
       setRequestPending(false);
-      routerHistory.push('/admin')
+      routerHistory.push('/admin');
     } catch (error) {
       if (error?.response?.status === 401) {
         alert('Invalid credentials');

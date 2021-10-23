@@ -59,9 +59,10 @@ const login = (req, res, next) => {
           // create a jwt token and send response
           // eslint-disable-next-line no-underscore-dangle
           const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET, { expiresIn: '24h' });
+          const userData = { name: user.name, email: user.email, userId: user._id };
           return res
             .status(200)
-            .json({ code: 200, message: 'login successful', userId: user._id, username: user.username, token });
+            .json({ code: 200, message: 'login successful', userData, token });
         })
         .catch((err) => {
           next(err); // channel errors to logger in app.js

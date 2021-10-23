@@ -38,11 +38,12 @@ export default function Admin() {
   useEffect(() => {
     // TODO: https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook
     const authToken = sessionStorage.getItem('authToken')
-    const userId = sessionStorage.getItem('userId')
-    if (!authToken || !userId) {
+    const userData = JSON.parse(sessionStorage.getItem('userData'));
+    if (!authToken || !userData) {
       history.push('/auth');
       return;
     }
+    const { userId } = userData;
     binService.current = new BinsService(authToken, userId);
     userService.current = new UserService(authToken, userId);
     fetchData();

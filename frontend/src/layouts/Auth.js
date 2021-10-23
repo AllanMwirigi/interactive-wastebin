@@ -25,8 +25,8 @@ export default function Auth() {
   useEffect(() => {
     // TODO: https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook
     const token = sessionStorage.getItem('authToken')
-    console.log('authToken:Auth', token)
-    if (token) history.push('/admin')
+    const userData = JSON.parse(sessionStorage.getItem('userData'));
+    if (token && userData) history.push('/admin');
   }, [])
 
   return (

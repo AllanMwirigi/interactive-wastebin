@@ -15,6 +15,11 @@ const UserDropdown = () => {
   const closeDropdownPopover = () => {
     setDropdownPopoverShow(false);
   };
+
+  let userName = "Name: N/A";
+  const userData = JSON.parse(sessionStorage.getItem('userData'));
+  if (userData && userData.name) userName = userData.name;
+
   return (
     <>
       <a
@@ -50,7 +55,7 @@ const UserDropdown = () => {
           }
           onClick={(e) => e.preventDefault()}
         >
-          Action
+          { userName }
         </a>
         <a
           href="#pablo"
