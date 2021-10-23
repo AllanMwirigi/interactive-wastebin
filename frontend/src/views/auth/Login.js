@@ -18,6 +18,7 @@ export default function Login() {
     try {
       const response = await signInService.logIn(emailInp, passwordInp);
       sessionStorage.setItem('authToken', response.data.token)
+      sessionStorage.setItem('userId', response.data.userId);
       setRequestPending(false);
       routerHistory.push('/admin')
     } catch (error) {

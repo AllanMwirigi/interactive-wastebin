@@ -61,7 +61,7 @@ const login = (req, res, next) => {
           const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET, { expiresIn: '24h' });
           return res
             .status(200)
-            .json({ code: 200, message: 'login successful', id: user._id, username: user.username, token });
+            .json({ code: 200, message: 'login successful', userId: user._id, username: user.username, token });
         })
         .catch((err) => {
           next(err); // channel errors to logger in app.js

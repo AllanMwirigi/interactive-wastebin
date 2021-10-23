@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 // components
 
 import CardStats from "components/Cards/CardStats.js";
 
-export default function HeaderStats() {
+export default function HeaderStats(props) {
+
+  let binCount = "N/A";
+  if (props.binCount > -1) {
+    binCount = props.binCount.toString();
+  }
+
   return (
     <>
       {/* Header */}
@@ -15,8 +21,8 @@ export default function HeaderStats() {
             <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
-                  statSubtitle="TRAFFIC"
-                  statTitle="350,897"
+                  statSubtitle="Bins"
+                  statTitle={binCount}
                   statArrow="up"
                   statPercent="3.48"
                   statPercentColor="text-emerald-500"
