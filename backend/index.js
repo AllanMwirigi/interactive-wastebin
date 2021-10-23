@@ -85,7 +85,7 @@ const server = http.createServer(app);
 // server start listening once connected to db
 db.on('open', () => {
   logger.info('MongoDB is up');
-  const PORT = process.env.PORT || 4000;
+  const PORT = process.env.PORT || 4500;
   server.listen(PORT).on('listening', () => logger.info(`Server listening on port ${PORT} | Env: ${process.env.NODE_ENV}`))
     .on('error', (err) => { logger.error(`Server | ${err.message}`); });
 });
