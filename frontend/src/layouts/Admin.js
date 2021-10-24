@@ -16,12 +16,16 @@ import Settings from "views/admin/Settings.js";
 import Tables from "views/admin/Tables.js";
 import { BinsService } from "services/services";
 import { UserService } from "services/services";
+import { DataContext } from "context/DataContext";
 
 export default function Admin() {
 
   const history = useHistory();
   const [binCount, setBinCount] = useState(-1);
   const [userCount, setUserCount] = useState(-1);
+  const [userList, setUserList] = useState([]);
+  const [binList, setBinList] = useState([]);
+
   /**
    * NOTE: a functional component does not have a render function, the component itself, with everything defined in it being 
    * the render function which returns a JSX in the end. 
@@ -52,11 +56,13 @@ export default function Admin() {
   const fetchData = async () => {
     try {
       const res1 = await binService.current.getAllBins();
-      const binsList = res1.data;
-      setBinCount(binsList.length);
+      const bins = res1.data;
+      setBinCount(bins.length);
+      setBinList(bins);
       const res2 = await userService.current.getAllUsers();
-      const userList = res2.data;
-      setUserCount(userList.length);
+      const users = res2.data;
+      setUserCount(users.length);
+      setUserList(users);
     } catch (error) {
       console.error(error);
       alert('An error occurred fetching data');
@@ -64,7 +70,7 @@ export default function Admin() {
   }
 
   return (
-    <>
+    <DataContext.Provider value={{userList, binList}}>
       <Sidebar />
       <div className="relative md:ml-64 bg-blueGray-100">
         <AdminNavbar />
@@ -81,6 +87,6 @@ export default function Admin() {
           <FooterAdmin />
         </div>
       </div>
-    </>
+    </DataContext.Provider>
   );
 }

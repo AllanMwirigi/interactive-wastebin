@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { DataContext } from "context/DataContext";
 
 // components
 
@@ -7,7 +8,12 @@ import CardBarChart from "components/Cards/CardBarChart.js";
 import CardPageVisits from "components/Cards/CardPageVisits.js";
 import CardSocialTraffic from "components/Cards/CardSocialTraffic.js";
 
-export default function Dashboard() {
+export default function Dashboard(props) {
+
+  // const { binList, userList } = useContext(DataContext);
+  const data = useContext(DataContext);
+  console.log('Dashboard', data);
+
   return (
     <>
       <div className="flex flex-wrap">
