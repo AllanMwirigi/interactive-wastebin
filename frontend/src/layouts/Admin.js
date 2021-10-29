@@ -51,7 +51,7 @@ export default function Admin() {
     binService.current = new BinsService(authToken, userId);
     userService.current = new UserService(authToken, userId);
     fetchData();
-  }, [])
+  }, [history])
 
   const fetchData = async () => {
     try {

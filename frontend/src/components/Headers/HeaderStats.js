@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, {  } from "react";
 
 // components
 
@@ -26,7 +26,7 @@ export default function HeaderStats(props) {
             <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
-                  statSubtitle="Bins"
+                  statSubtitle="Full Bins"
                   statTitle={binCount}
                   statArrow="up"
                   statPercent="3.48"
