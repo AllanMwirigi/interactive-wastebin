@@ -16,12 +16,12 @@ export default function Dashboard() {
   // console.log('Dashboard', data);
   const userTableContent = {
     type: 'users',
-    headers: ['Name', 'Email', 'Role'],
+    headers: ['Name', 'Role'],
     data: userList,
   }
   const binTableContent = {
     type: 'bins',
-    headers: ['ID', 'Location', 'Current Volume', 'Status', 'Progress'],
+    headers: ['ID', 'Location', 'Last Emptied', 'Current Volume', 'Progress to Full', 'Assigned To'],
     data: binList,
   }
 

@@ -36,7 +36,8 @@ app.use(express.urlencoded({ extended: false }));
 // map endpoint path to route file
 app.use('/api/v1/users', userRoutes);
 // eslint-disable-next-line no-use-before-define
-app.use('/api/v1/bins', auth, binRoutes, emitEvent);
+// app.use('/api/v1/bins', auth, binRoutes, emitEvent);
+app.use('/api/v1/bins', binRoutes, emitEvent);
 // app.use('/api/v1', userRoutes); // to allow POST /login route
 
 // any invalid endpoints that don't match the above are handled here
@@ -90,6 +91,7 @@ db.once('open', () => {
     .on('error', (err) => { logger.error(`Server | ${err.message}`); });
 });
 
+// TODO: IMPORTANT!!! - REVIEW THIS - https://socket.io/docs/v4/server-application-structure/
 const io = socketio(server);
 
 // sockets for real time data

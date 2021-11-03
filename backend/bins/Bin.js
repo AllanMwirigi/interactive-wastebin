@@ -4,15 +4,16 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const binSchema = new Schema({
-  lat: { type: String, required: true },
-  lng: { type: String, required: true },
-  max_weight: { type: Number, required: true },
-  min_height: { type: Number, required: true },
-  current_weight: { type: Number, default: 0 }, // bin might be empty initially
-  current_height: { type: Number, default: 0 },
-  bin_code: { type: String, required: true, unique: true },
-  lastEmptied: { type: Date },
-  location: { type: String }
+  width: { type: Number, required: true },
+  length: { type: Number, required: true },
+  height: { type: Number, required: true },
+  location: { type: String, required: true },
+  maxHeight: { type: Number }, // by default will be 90% of height
+  currentHeight: { type: Number, default: 0 },
+  lastEmptied: { type: Date, default: null },
+  assignedTo: { type: Schema.Types.ObjectId, ref: 'User' },
+  lat: { type: Number },
+  lng: { type: Number },
 });
 
 module.exports = mongoose.model('Bin', binSchema);

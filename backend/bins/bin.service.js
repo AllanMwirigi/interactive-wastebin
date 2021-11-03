@@ -7,8 +7,8 @@ exports.createBin = async (req, res, next) => {
     const bin = new Bin(req.body);
     const doc = await bin.save();
     // eslint-disable-next-line no-underscore-dangle
-    // res.status(201).json({ binId: doc._id });
-    res.status(201).json(doc);
+    res.status(201).json({ binId: doc._id });
+    // res.status(201).json(doc);
   } catch (error) {
     next(error); // this will go to the error handler in app.js e.g. if there's a db error above
   }

@@ -4,7 +4,9 @@ const mongoose = require('mongoose');
 const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   name: { type: String },
-  password: { type: String, required: true }
+  password: { type: String, required: true },
+  role: { type: String, required: true },
+  phoneNo: { type: String }
 });
 
 // this exports the defined User Model
