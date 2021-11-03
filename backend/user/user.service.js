@@ -8,13 +8,13 @@ const User = require('./User');
 const saltRounds = 10; // number of salting rounds for bcrypt password hash
 
 const signup = (req, res, next) => {
-  const { email, name, password } = req.body; // user attributes from request body
+  const { password } = req.body; // user attributes from request body
 
   bcrypt
     .hash(password, saltRounds)
     .then((hash) => {
       // new user details
-      const user = new User({ email, name, password: hash });
+      const user = new User({ ...req.body, password: hash });
       // attempt to save user in database
       user.save()
         // response returned after successfully saving user in database

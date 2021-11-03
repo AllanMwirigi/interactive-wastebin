@@ -4,7 +4,8 @@ const { sendEmail } = require('../utils/email');
 
 exports.createBin = async (req, res, next) => {
   try {
-    const bin = new Bin(req.body);
+    const maxHeight = Math.ceil(0.9 * req.body.height);
+    const bin = new Bin({ ...req.body, maxHeight });
     const doc = await bin.save();
     // eslint-disable-next-line no-underscore-dangle
     res.status(201).json({ binId: doc._id });
@@ -16,7 +17,7 @@ exports.createBin = async (req, res, next) => {
 
 exports.getAllBins = async (req, res, next) => {
   try {
-    const list = await Bin.find({}).lean().exec();
+    const list = await Bin.find({}).populate('assignedTo').lean().exec();
     res.status(200).json(list);
   } catch (error) {
     next(error);
