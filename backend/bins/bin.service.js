@@ -45,11 +45,11 @@ exports.updateBin = async (req, res, next) => {
     if (update.currentHeight != null) { // go to email and socketio only if there is an update in currentHeight
       const { currentHeight, maxHeight } = bin;
       if (currentHeight >= maxHeight) {
-        const msg = `<p>Bin <strong>${bin._id.slice(-6).toUpperCase()}</strong> is full.</>
+        const msg = `<p>Bin <strong>${bin._id.toString().slice(-6).toUpperCase()}</strong> is full.</>
                   <p>Please empty it.</p>
                   <p>Regards, <b>Interactive WasteBin Team</b></p>`;
         const title = 'Bin Full';
-        sendEmail(req.headers.userid, title, msg);
+        // sendEmail(req.headers.userid, title, msg);
       }
       res.locals.sockdata = {
         binId: req.params.id, currentHeight, maxHeight,

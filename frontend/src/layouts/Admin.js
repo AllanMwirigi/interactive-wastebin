@@ -21,6 +21,9 @@ import { DataContext } from "context/DataContext";
 import { constants } from "utils/utils";
 
 const socketIo = socketIOClient(process.env.REACT_APP_BACKEND_BASE_URL);
+// look into this if the client is needed in multiple components
+// https://levelup.gitconnected.com/handling-socketio-rooms-with-react-hooks-4723dd44692e
+// 
 
 export default function Admin() {
 
@@ -56,11 +59,17 @@ export default function Admin() {
     binService.current = new BinsService(authToken, userId);
     userService.current = new UserService(authToken, userId);
     fetchData();
+
     initSocketIo();
-    return () => {
-      socketIo.off(constants.SOCKETIO_EVENT_BIN_UPDATED);
-    };
-  }, [history])
+    // initSocketIo();
+    // subscribeToBinUpdates((err, data) => {
+    //   if (err) return;
+
+    // });
+    // return () => {
+    //   unsubscribeToBinUpdates();
+    // };
+  }, [])
 
   const fetchData = async () => {
     try {
@@ -86,15 +95,26 @@ export default function Admin() {
 
   const initSocketIo = () => {
     socketIo.on(constants.SOCKETIO_EVENT_BIN_UPDATED, ({ binId, currentHeight, maxHeight }) => {
+      console.log('SOCKETIO_EVENT_BIN_UPDATED')
+      setBinList(oldList => {
+        for (let bin of oldList) {
+          if (bin._id === binId) {
+            bin.currentHeight = currentHeight;
+            break;
+          }
+        }
+        return oldList;
+      });
       setSocketIoBinUpdate({ binId, currentHeight, maxHeight });
       if (currentHeight >= maxHeight) {
-        setBinCount(binCount + 1);
+        setBinCount(oldCount => oldCount + 1);
       }
+      // TODO: reset binCount from lastEmptied
     });
   }
 
   return (
-    <DataContext.Provider value={{userList, binList, socketIoBinUpdate}}>
+    <DataContext.Provider value={{userList, binList, setBinList, socketIoBinUpdate}}>
       <Sidebar />
       <div className="relative md:ml-64 bg-blueGray-100">
         <AdminNavbar />

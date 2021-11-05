@@ -9,8 +9,10 @@ import "assets/styles/tailwind.css";
 
 import Admin from "layouts/Admin.js";
 import Auth from "layouts/Auth.js";
+import { ErrorBoundary } from "utils/ErrorBoundary";
 
 ReactDOM.render(
+  <ErrorBoundary>
   <BrowserRouter>
     <Switch>
       {/* add routes with layouts */}
@@ -24,6 +26,7 @@ ReactDOM.render(
       {/* <Redirect from="*" to="/" /> */}
       <Redirect from="*" to="/auth" />
     </Switch>
-  </BrowserRouter>,
+  </BrowserRouter>
+  </ErrorBoundary>,
   document.getElementById("root")
 );

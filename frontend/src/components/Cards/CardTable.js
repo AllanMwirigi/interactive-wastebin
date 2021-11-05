@@ -1,15 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 // components
 
 import TableDropdown from "components/Dropdowns/TableDropdown.js";
-import { DataContext } from "context/DataContext";
 
-export default function CardTable({ color, content }) {
-
-  // const { socketIoBinUpdate } = useContext(DataContext);
-  const [tableRows, setTableRows] = useState([]);
+export default function CardTable({ color, content, list }) {
 
   const colHeaders = content.headers.map((col) =>
     <th key={col}
@@ -26,7 +22,7 @@ export default function CardTable({ color, content }) {
 
   let userRows = []; let binRows = [];
   if (content.type === 'users') {
-      userRows = content.list.map((user) =>
+      userRows = list.map((user) =>
         <tr key={ user._id }>
           <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
             <span
@@ -41,21 +37,16 @@ export default function CardTable({ color, content }) {
           <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
             { user.role }
           </td>
-          {/* <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-            N/A
-          </td> */}
-          {/* <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-            <TableDropdown />
-          </td> */}
         </tr>
     );
   } else {
-    binRows = content.list.map((bin) => {
-      console.log(content)
+    binRows = list.map((bin) => {
       const { _id, width, length, maxHeight, currentHeight, lastEmptied, location, assignedTo } = bin;
       const maxVolume = length * width * maxHeight;
-      const currentVolume = length * width * currentHeight;
-      const percentage = Math.ceil((currentHeight/maxHeight)*100);
+      let currentVolume = length * width * currentHeight;
+      currentVolume = Math.min(currentVolume, maxVolume);
+      let percentage = Math.ceil((currentHeight/maxHeight)*100);
+      percentage = Math.min(percentage, 100);
       return (
         <tr key={ _id }>
           <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
@@ -89,7 +80,7 @@ export default function CardTable({ color, content }) {
               </div>
               <span className="ml-2">{percentage}%</span>
             </div>
-            {/* add time since full below */}
+            {/* TODO: add time since full below */}
           </td>
           <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
             { assignedTo == null ? 'N/A' : assignedTo.name }

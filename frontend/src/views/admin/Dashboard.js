@@ -11,45 +11,25 @@ import CardSocialTraffic from "components/Cards/CardSocialTraffic.js";
 
 export default function Dashboard() {
 
-  const { binList, userList, socketIoBinUpdate } = useContext(DataContext);
+  const { binList, userList } = useContext(DataContext);
   // const binMap = {}; // map id to bin data to do constant time updates?
-  const [binTableContent, setBinTableContent] = useState({
+  const binTableContent = {
     type: 'bins',
     headers: ['ID', 'Location', 'Last Emptied', 'Current Volume', 'Progress to Full', 'Assigned To'],
-    list: binList,
-  });
+  };
   const userTableContent = {
     type: 'users',
     headers: ['Name', 'Role'],
-    list: userList,
   }
-  // const binTableContent = {
-  //   type: 'bins',
-  //   headers: ['ID', 'Location', 'Last Emptied', 'Current Volume', 'Progress to Full', 'Assigned To'],
-  //   list: binList,
-  // }
-
-  useEffect(() => {
-    if (socketIoBinUpdate) {
-      const { binId, currentHeight } = socketIoBinUpdate;
-      for (let bin of binTableContent.list) {
-        if (bin._id === binId) {
-          bin.currentHeight = currentHeight;
-          break;
-        }
-      }
-      setBinTableContent(binTableContent);
-    }
-  }, [binTableContent, socketIoBinUpdate]);
 
   return (
     <>
       <div className="flex flex-wrap mt-4">
         <div className="w-full mb-12 px-4">
-          <CardTable color="dark" content={binTableContent}/>
+          <CardTable color="dark" content={binTableContent} list={binList}/>
         </div>
         <div className="w-full mb-12 px-4">
-          <CardTable content={userTableContent}/>
+          <CardTable content={userTableContent} list={userList}/>
         </div>
       </div>
       <div className="flex flex-wrap">

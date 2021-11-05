@@ -93,7 +93,12 @@ db.once('open', () => {
 });
 
 // TODO: IMPORTANT!!! - REVIEW THIS - https://socket.io/docs/v4/server-application-structure/
-const io = socketio(server);
+const io = socketio(server, {
+  cors: {
+    origin: originsList,
+    // credentials: true
+  }
+});
 
 // sockets for real time data
 io.on('connection', (socket) => {
