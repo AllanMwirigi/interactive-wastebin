@@ -36,25 +36,27 @@ exports.getBin = async (req, res, next) => {
 exports.updateBin = async (req, res, next) => {
   try {
     // eslint-disable-next-line camelcase
-    const { update, meta } = req.body;
-    const result = await Bin.updateOne({ _id: req.params.id }, update).exec();
-    if (result.n === 0) {
+    const update  = req.body;
+    const bin = await Bin.findOneAndUpdate({ _id: req.params.id }, update, { new: true }).exec();
+    if (!bin) {
       res.status(404).json({ message: 'No bin matches that id' });
       return;
     }
-    if (update.current_height) { // go to email,sockets only if there is an update in current_height
-      if (update.current_height >= 99) {
-        const msg = `<p>Bin ${meta.bin_code} is full.</>
+    if (update.currentHeight != null) { // go to email and socketio only if there is an update in currentHeight
+      const { currentHeight, maxHeight } = bin;
+      if (currentHeight >= maxHeight) {
+        const msg = `<p>Bin <strong>${bin._id.slice(-6).toUpperCase()}</strong> is full.</>
                   <p>Please empty it.</p>
-                  <p>Regards, <b>PingBin Team</b></p>`;
-        sendEmail(req.headers.userid, 'Bin Full', msg);
+                  <p>Regards, <b>Interactive WasteBin Team</b></p>`;
+        const title = 'Bin Full';
+        sendEmail(req.headers.userid, title, msg);
       }
       res.locals.sockdata = {
-        binId: req.params.id, height: update.current_height
+        binId: req.params.id, currentHeight, maxHeight,
       };
       next();
     } else {
-      res.sendStatus(201);
+      res.sendStatus(200);
     }
   } catch (error) {
     next(error);

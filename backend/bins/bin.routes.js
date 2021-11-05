@@ -14,7 +14,7 @@ router.get('/', getAllBins);
 router.get('/:id', getBin);
 
 // update bin
-router.put('/:id', updateBin);
+router.patch('/:id', updateBin);
 
 // set bin emptied
 router.post('/:id/emptied', setBinEmptied);

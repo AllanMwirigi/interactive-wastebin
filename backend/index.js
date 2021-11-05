@@ -14,6 +14,7 @@ const userRoutes = require('./user/user.routes');
 const binRoutes = require('./bins/bin.routes');
 const auth = require('./middleware/auth');
 const { sendEmail } = require('./utils/email');
+const { constants } = require('./utils/constants');
 
 let originsList;
 if (process.env.NODE_ENV === 'development') {
@@ -115,8 +116,8 @@ io.on('connection', (socket) => {
 
 function emitEvent(req, res, next) {
   try {
-    io.emit('bin', res.locals.sockdata);
-    res.sendStatus(201);
+    io.emit(constants.SOCKETIO_EVENT_BIN_UPDATED, res.locals.sockdata);
+    res.sendStatus(200);
   } catch (error) {
     next(error);
   }

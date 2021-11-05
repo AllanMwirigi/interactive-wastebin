@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { DataContext } from "context/DataContext";
 
 // components
@@ -11,19 +11,36 @@ import CardSocialTraffic from "components/Cards/CardSocialTraffic.js";
 
 export default function Dashboard() {
 
-  const { binList, userList } = useContext(DataContext);
-  // const data = useContext(DataContext);
-  // console.log('Dashboard', data);
+  const { binList, userList, socketIoBinUpdate } = useContext(DataContext);
+  // const binMap = {}; // map id to bin data to do constant time updates?
+  const [binTableContent, setBinTableContent] = useState({
+    type: 'bins',
+    headers: ['ID', 'Location', 'Last Emptied', 'Current Volume', 'Progress to Full', 'Assigned To'],
+    list: binList,
+  });
   const userTableContent = {
     type: 'users',
     headers: ['Name', 'Role'],
-    data: userList,
+    list: userList,
   }
-  const binTableContent = {
-    type: 'bins',
-    headers: ['ID', 'Location', 'Last Emptied', 'Current Volume', 'Progress to Full', 'Assigned To'],
-    data: binList,
-  }
+  // const binTableContent = {
+  //   type: 'bins',
+  //   headers: ['ID', 'Location', 'Last Emptied', 'Current Volume', 'Progress to Full', 'Assigned To'],
+  //   list: binList,
+  // }
+
+  useEffect(() => {
+    if (socketIoBinUpdate) {
+      const { binId, currentHeight } = socketIoBinUpdate;
+      for (let bin of binTableContent.list) {
+        if (bin._id === binId) {
+          bin.currentHeight = currentHeight;
+          break;
+        }
+      }
+      setBinTableContent(binTableContent);
+    }
+  }, [binTableContent, socketIoBinUpdate]);
 
   return (
     <>

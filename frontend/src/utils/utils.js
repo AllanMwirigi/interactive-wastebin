@@ -8,3 +8,7 @@ export const getBaseUrl = () => {
   }
   return url;
 }
+
+export const constants = {
+  SOCKETIO_EVENT_BIN_UPDATED: "SOCKETIO_EVENT_BIN_UPDATED",
+}
