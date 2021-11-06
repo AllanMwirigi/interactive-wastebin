@@ -14,12 +14,11 @@ const transporter = nodemailer.createTransport({
   tls: { rejectUnauthorized: false }
 });
 
-exports.sendEmail = async (userId, subject, htmlMsg) => {
+exports.sendEmail = async (recipientEmail, subject, htmlMsg) => {
   // try { // removed the try catch block just to pass codacy checks, restore in prod
-  const receipient = await User.findById(userId).select('-_id email').lean().exec();
   const mailOptions = {
     from: emailName, // sender address
-    to: receipient.email, // list of receivers
+    to: recipientEmail, // list of receivers
     subject, // Subject line
     html: htmlMsg // plain text body
   };
