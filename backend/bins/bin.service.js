@@ -52,7 +52,7 @@ exports.updateBin = async (req, res, next) => {
                     <p>Regards,</b></p>
                     <p><b>Interactive WasteBin Team</b></p>`;
         const title = 'Bin Full';
-        sendEmail(assignedTo.email, title, msg);
+        // sendEmail(assignedTo.email, title, msg);
       }
       res.locals.sockdata = {
         binId: req.params.id, currentHeight, maxHeight,

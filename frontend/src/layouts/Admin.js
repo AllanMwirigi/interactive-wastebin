@@ -28,7 +28,8 @@ const socketIo = socketIOClient(process.env.REACT_APP_BACKEND_BASE_URL);
 export default function Admin() {
 
   const history = useHistory();
-  const [binCount, setBinCount] = useState(-1);
+  // const [binCount, setBinCount] = useState(0);
+  const [binCountSet, setBinCountSet] = useState(new Set());
   const [userCount, setUserCount] = useState(-1);
   const [userList, setUserList] = useState([]);
   const [binList, setBinList] = useState([]);
@@ -75,13 +76,16 @@ export default function Admin() {
     try {
       const res1 = await binService.current.getAllBins();
       const bins = res1.data;
-      let binCount = 0;
-      for (let bin of bins) {
-        if (bin.currentHeight >= bin.maxHeight) {
-          binCount += 1;
+      // let binCount = 0;
+      setBinCountSet(oldSet => {
+        for (let bin of bins) {
+          if (bin.currentHeight >= bin.maxHeight) {
+            oldSet.add(bin._id)
+            // binCount += 1;
+          }
         }
-      }
-      setBinCount(binCount);
+        return oldSet;
+      });
       setBinList(bins);
       const res2 = await userService.current.getAllUsers();
       const users = res2.data;
@@ -96,30 +100,46 @@ export default function Admin() {
   const initSocketIo = () => {
     socketIo.on(constants.SOCKETIO_EVENT_BIN_UPDATED, ({ binId, currentHeight, maxHeight }) => {
       console.log('SOCKETIO_EVENT_BIN_UPDATED')
+      // TODO: probably track previous currentHeight to prevent multiple calls to this
       setBinList(oldList => {
-        for (let bin of oldList) {
+        const newList = oldList.map((bin) => {
           if (bin._id === binId) {
             bin.currentHeight = currentHeight;
-            break;
           }
-        }
-        return oldList;
+          return bin;
+        });
+        return newList;
+        // for (let bin of oldList) {
+        //   if (bin._id === binId) {
+        //     bin.currentHeight = currentHeight;
+        //     break;
+        //   }
+        // }
+        // return oldList;
       });
-      setSocketIoBinUpdate({ binId, currentHeight, maxHeight });
+      // setSocketIoBinUpdate({ binId, currentHeight, maxHeight });
       if (currentHeight >= maxHeight) {
-        setBinCount(oldCount => oldCount + 1);
+        setBinCountSet(oldSet => {
+          oldSet.add(binId)
+          return oldSet;
+          // const newSet = oldSet.add(binId)
+          // return newSet;
+        });
+        // setBinCount(oldCount => oldCount + 1);
       }
       // TODO: reset binCount from lastEmptied
     });
   }
 
   return (
-    <DataContext.Provider value={{userList, binList, setBinList, socketIoBinUpdate}}>
+    // <DataContext.Provider value={{userList, binList, setBinList, socketIoBinUpdate}}>
+    <DataContext.Provider value={{userList, binList, binCountSet}}>
       <Sidebar />
       <div className="relative md:ml-64 bg-blueGray-100">
         <AdminNavbar />
         {/* Header */}
-        <HeaderStats binCount={binCount} userCount={userCount} />
+        {/* <HeaderStats binCountSet={binCountSet} userCount={userCount} /> */}
+        <HeaderStats binCount={binCountSet.size} userCount={userCount} />
         <div className="px-4 md:px-10 mx-auto w-full -m-24">
           <Switch>
             <Route path="/admin/dashboard" exact component={Dashboard} />

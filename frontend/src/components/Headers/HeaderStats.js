@@ -1,19 +1,30 @@
-import React, {  } from "react";
+import React, { useContext, useEffect } from "react";
 
 // components
 
 import CardStats from "components/Cards/CardStats.js";
+import { DataContext } from "context/DataContext";
 
 export default function HeaderStats(props) {
 
-  let binCount = "N/A";
-  if (props.binCount > -1) {
+  const { binCountSet } = useContext(DataContext);
+
+  // let binCount = "0";
+  // if (binCountSet.size > 0) {
+  //   binCount = binCountSet.size.toString();
+  // }
+  let binCount = "0";
+  if (props.binCount > 0) {
     binCount = props.binCount.toString();
   }
   let userCount = "N/A";
   if (props.userCount > -1) {
     userCount = props.userCount.toString();
   }
+
+  useEffect(() => {
+    console.log('jere')
+  }, [binCountSet])
 
   return (
     <>
