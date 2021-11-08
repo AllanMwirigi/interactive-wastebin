@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 // components
 
 import TableDropdown from "components/Dropdowns/TableDropdown.js";
+import { Link } from "react-router-dom";
 
 export default function CardTable({ color, content, list }) {
 
@@ -19,6 +20,10 @@ export default function CardTable({ color, content, list }) {
       {col}
     </th>
   );
+
+  const viewBin = (bin) => {
+    // console.log('bin clicked')
+  }
 
   let userRows = []; let binRows = [];
   if (content.type === 'users') {
@@ -48,16 +53,19 @@ export default function CardTable({ color, content, list }) {
       let percentage = Math.ceil((currentHeight/maxHeight)*100);
       percentage = Math.min(percentage, 100);
       return (
-        <tr key={ _id }>
+        
+        <tr key={ _id } onClick={(_event) => viewBin(bin)}>
           <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-            <span
-              className={
-                "ml-3 font-bold " +
-                +(color === "light" ? "text-blueGray-600" : "text-white")
-              }
-            >
-              { _id.slice(-6).toUpperCase()}
-            </span>
+            <Link to={{ pathname: "/admin/bin", state: {bin}}}>
+              <span
+                className={
+                  "ml-3 font-bold " +
+                  +(color === "light" ? "text-blueGray-600" : "text-white")
+                }
+              >
+                { _id.slice(-6).toUpperCase()}
+              </span>
+            </Link>
           </th>
           <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
             { location }

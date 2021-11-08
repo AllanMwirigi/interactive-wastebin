@@ -19,6 +19,7 @@ import { BinsService } from "services/services";
 import { UserService } from "services/services";
 import { DataContext } from "context/DataContext";
 import { constants } from "utils/utils";
+import { BinDetail } from "views/admin/BinDetail";
 
 const socketIo = socketIOClient(process.env.REACT_APP_BACKEND_BASE_URL);
 // look into this if the client is needed in multiple components
@@ -53,6 +54,8 @@ export default function Admin() {
     const authToken = sessionStorage.getItem('authToken')
     const userData = JSON.parse(sessionStorage.getItem('userData'));
     if (!authToken || !userData) {
+      // TODO: look into this to prevent back; check <Redirect
+      // https://stackoverflow.com/questions/51116747/react-router-link-vs-redirect-vs-history
       history.push('/auth');
       return;
     }
@@ -62,6 +65,7 @@ export default function Admin() {
     fetchData();
 
     initSocketIo();
+    
     // initSocketIo();
     // subscribeToBinUpdates((err, data) => {
     //   if (err) return;
@@ -117,7 +121,7 @@ export default function Admin() {
         // }
         // return oldList;
       });
-      // setSocketIoBinUpdate({ binId, currentHeight, maxHeight });
+      setSocketIoBinUpdate({ binId, currentHeight, maxHeight });
       if (currentHeight >= maxHeight) {
         setBinCountSet(oldSet => {
           oldSet.add(binId)
@@ -133,7 +137,7 @@ export default function Admin() {
 
   return (
     // <DataContext.Provider value={{userList, binList, setBinList, socketIoBinUpdate}}>
-    <DataContext.Provider value={{userList, binList, binCountSet}}>
+    <DataContext.Provider value={{userList, binList, socketIoBinUpdate}}>
       <Sidebar />
       <div className="relative md:ml-64 bg-blueGray-100">
         <AdminNavbar />
@@ -143,6 +147,7 @@ export default function Admin() {
         <div className="px-4 md:px-10 mx-auto w-full -m-24">
           <Switch>
             <Route path="/admin/dashboard" exact component={Dashboard} />
+            <Route path="/admin/bin" exact component={BinDetail} />
             <Route path="/admin/maps" exact component={Maps} />
             <Route path="/admin/settings" exact component={Settings} />
             <Route path="/admin/tables" exact component={Tables} />

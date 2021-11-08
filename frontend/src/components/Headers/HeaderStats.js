@@ -7,7 +7,7 @@ import { DataContext } from "context/DataContext";
 
 export default function HeaderStats(props) {
 
-  const { binCountSet } = useContext(DataContext);
+  // const { binCountSet } = useContext(DataContext);
 
   // let binCount = "0";
   // if (binCountSet.size > 0) {
@@ -21,10 +21,6 @@ export default function HeaderStats(props) {
   if (props.userCount > -1) {
     userCount = props.userCount.toString();
   }
-
-  useEffect(() => {
-    console.log('jere')
-  }, [binCountSet])
 
   return (
     <>
