@@ -35,6 +35,7 @@ export default function Admin() {
   const [userList, setUserList] = useState([]);
   const [binList, setBinList] = useState([]);
   const [socketIoBinUpdate, setSocketIoBinUpdate] = useState();
+  const [location, setLocation] = useState({ lat: "-1.2976128", lng: "36.7951872" })
 
   /**
    * NOTE: a functional component does not have a render function, the component itself, with everything defined in it being 
@@ -137,7 +138,7 @@ export default function Admin() {
 
   return (
     // <DataContext.Provider value={{userList, binList, setBinList, socketIoBinUpdate}}>
-    <DataContext.Provider value={{userList, binList, socketIoBinUpdate}}>
+    <DataContext.Provider value={{userList, binList, socketIoBinUpdate, location}}>
       <Sidebar />
       <div className="relative md:ml-64 bg-blueGray-100">
         <AdminNavbar />
