@@ -2,22 +2,7 @@ import MapExample from 'components/Maps/MapExample';
 import { DataContext } from 'context/DataContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import { constants } from 'utils/utils';
-
-const getProgressColors = (percentage) => {
-  let volumeColor; let badgeColor;
-  if (percentage <= 60) {
-    volumeColor = constants.VOLUME_PROGRESS_COLOR_OK;
-    badgeColor = constants.VOLUME_BADGE_COLOR_OK;
-  } else if (percentage > 60 && percentage < 85) {
-    volumeColor = constants.VOLUME_PROGRESS_COLOR_ALMOST;
-    badgeColor = constants.VOLUME_BADGE_COLOR_ALMOST;
-  } else {
-    volumeColor = constants.VOLUME_PROGRESS_COLOR_FULL;
-    badgeColor = constants.VOLUME_BADGE_COLOR_FULL;
-  }
-  return { volumeColor, badgeColor };
-}
+import { getProgressColors } from 'utils/utils';
 
 export function BinDetail() {
 

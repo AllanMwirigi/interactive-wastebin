@@ -45,7 +45,7 @@ export default function HeaderStats(props) {
               </div>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
-                    statSubtitle="USERS"
+                    statSubtitle="Users"
                     statTitle={userCount}
                     statArrow="down"
                     statPercent="1.10"

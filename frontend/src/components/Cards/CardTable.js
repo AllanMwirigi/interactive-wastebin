@@ -5,13 +5,14 @@ import PropTypes from "prop-types";
 
 import TableDropdown from "components/Dropdowns/TableDropdown.js";
 import { Link } from "react-router-dom";
+import { getProgressColors } from "utils/utils";
 
 export default function CardTable({ color, content, list }) {
 
   const colHeaders = content.headers.map((col) =>
     <th key={col}
       className={
-        "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
+        "px-6 align-middle border border-solid py-3 text-base uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
         (color === "light"
           ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
           : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
@@ -29,7 +30,7 @@ export default function CardTable({ color, content, list }) {
   if (content.type === 'users') {
       userRows = list.map((user) =>
         <tr key={ user._id }>
-          <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+          <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 text-left flex items-center">
             <span
               className={
                 "ml-3 font-bold " +
@@ -39,7 +40,7 @@ export default function CardTable({ color, content, list }) {
               {user.name}
             </span>
           </th>
-          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
             { user.role }
           </td>
         </tr>
@@ -52,10 +53,12 @@ export default function CardTable({ color, content, list }) {
       currentVolume = Math.min(currentVolume, maxVolume);
       let percentage = Math.ceil((currentHeight/maxHeight)*100);
       percentage = Math.min(percentage, 100);
+      const { volumeColor, badgeColor } = getProgressColors(percentage);
+
       return (
         
         <tr key={ _id } onClick={(_event) => viewBin(bin)}>
-          <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+          <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 text-left flex items-center">
             <Link to={{ pathname: "/admin/bin", state: {bin}}}>
               <span
                 className={
@@ -67,22 +70,22 @@ export default function CardTable({ color, content, list }) {
               </span>
             </Link>
           </th>
-          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
             { location }
           </td>
-          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
             { lastEmptied == null ? 'Never' : lastEmptied }
           </td>
-          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-            <i className="fas fa-circle text-orange-500 mr-2"></i> {currentVolume}/{maxVolume} cm<sup>3</sup>
+          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
+            <i className={`fas fa-circle ${badgeColor} mr-2`}></i> {currentVolume}/{maxVolume} cm<sup>3</sup>
           </td>
-          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
             <div className="flex items-center">
               <div className="relative w-full">
-                <div className="overflow-hidden h-2 text-xs flex rounded bg-red-200">
+                <div className="overflow-hidden h-2 text-base flex rounded bg-blueGray-50">
                   <div
                     style={{ width: `${percentage}%` }}
-                    className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-500"
+                    className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${volumeColor}`}
                   ></div>
                 </div>
               </div>
@@ -90,10 +93,10 @@ export default function CardTable({ color, content, list }) {
             </div>
             {/* TODO: add time since full below */}
           </td>
-          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
             { assignedTo == null ? 'N/A' : assignedTo.name }
           </td>
-          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
+          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 text-right">
             <TableDropdown />
           </td>
         </tr>

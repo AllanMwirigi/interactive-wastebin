@@ -18,3 +18,18 @@ export const constants = {
   VOLUME_BADGE_COLOR_ALMOST: "text-yellow-500",
   VOLUME_BADGE_COLOR_FULL: "text-red-500",
 }
+
+export const getProgressColors = (percentage) => {
+  let volumeColor; let badgeColor;
+  if (percentage <= 60) {
+    volumeColor = constants.VOLUME_PROGRESS_COLOR_OK;
+    badgeColor = constants.VOLUME_BADGE_COLOR_OK;
+  } else if (percentage > 60 && percentage < 85) {
+    volumeColor = constants.VOLUME_PROGRESS_COLOR_ALMOST;
+    badgeColor = constants.VOLUME_BADGE_COLOR_ALMOST;
+  } else {
+    volumeColor = constants.VOLUME_PROGRESS_COLOR_FULL;
+    badgeColor = constants.VOLUME_BADGE_COLOR_FULL;
+  }
+  return { volumeColor, badgeColor };
+}
