@@ -6,6 +6,7 @@ from timeloop import Timeloop
 from datetime import timedelta
 import ultrasonic
 import audio
+import gps
 
 # gpiozero always uses BCM
 # NOTE: PIR sensor has 1min initialization period on startup
@@ -37,11 +38,16 @@ pir.when_motion = on_motion
 # compute volume from ultrasonic sensor on separate thread
 
 tl = Timeloop()
+
 @tl.job(interval=timedelta(minutes=0.1))
 def compute_height_every_2min():
     ultrasonic.computeHeight()
 
-tl.start() # starts timeloop on separate thread
+@tl.job(interval=timedelta(minutes=10))
+def get_location_every_10min():
+    gps.getLocation()
+
+# tl.start() # starts timeloop on separate thread
 # tl.start(block=True) # starts timeloop on main thread
 
 def signal_handler(signum, frame):

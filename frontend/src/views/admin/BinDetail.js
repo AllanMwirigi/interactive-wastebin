@@ -8,9 +8,9 @@ export function BinDetail() {
 
   const { bin } = useLocation().state;
   const { socketIoBinUpdate } = useContext(DataContext);
-  const { length, width, maxHeight, currentHeight, location, lastEmptied, assignedTo } = bin;
-  const maxVolume = length * width * maxHeight;
-  const [currentVolume, setCurrentVolume] = useState(Math.min((length * width * currentHeight), maxVolume));
+  const { crossSectionArea, maxHeight, currentHeight, location, lastEmptied, assignedTo } = bin;
+  const maxVolume = crossSectionArea * maxHeight;
+  const [currentVolume, setCurrentVolume] = useState(Math.min((crossSectionArea * currentHeight), maxVolume));
   const [percentage, setPercentage] = useState(Math.min(Math.ceil((currentHeight/maxHeight)*100), 100));
   const binShortId = bin._id.slice(-6).toUpperCase();
   const { volumeColor, badgeColor } = getProgressColors(percentage);
@@ -26,7 +26,7 @@ export function BinDetail() {
       const { binId, currentHeight } = socketIoBinUpdate;
       if (bin._id === binId) {
         bin.currentHeight = currentHeight;
-        let newCurrentVolume = length * width * currentHeight;
+        let newCurrentVolume = crossSectionArea * currentHeight;
         newCurrentVolume = Math.min(newCurrentVolume, maxVolume);
         let newPercentage = Math.ceil((currentHeight/maxHeight)*100);
         newPercentage = Math.min(newPercentage, 100);

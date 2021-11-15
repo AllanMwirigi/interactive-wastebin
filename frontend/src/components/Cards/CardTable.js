@@ -47,9 +47,9 @@ export default function CardTable({ color, content, list }) {
     );
   } else {
     binRows = list.map((bin) => {
-      const { _id, width, length, maxHeight, currentHeight, lastEmptied, location, assignedTo } = bin;
-      const maxVolume = length * width * maxHeight;
-      let currentVolume = length * width * currentHeight;
+      const { _id, crossSectionArea, maxHeight, currentHeight, lastEmptied, location, assignedTo } = bin;
+      const maxVolume = crossSectionArea * maxHeight;
+      let currentVolume = crossSectionArea * currentHeight;
       currentVolume = Math.min(currentVolume, maxVolume);
       let percentage = Math.ceil((currentHeight/maxHeight)*100);
       percentage = Math.min(percentage, 100);

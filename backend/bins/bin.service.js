@@ -5,7 +5,7 @@ const { sendSMS } = require('../utils/sms');
 
 exports.createBin = async (req, res, next) => {
   try {
-    const maxHeight = Math.ceil(0.9 * req.body.height);
+    const maxHeight = Math.ceil(0.81 * req.body.height);
     const bin = new Bin({ ...req.body, maxHeight });
     const doc = await bin.save();
     // eslint-disable-next-line no-underscore-dangle
