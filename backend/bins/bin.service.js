@@ -1,6 +1,7 @@
 
 const Bin = require('./Bin');
 const { sendEmail } = require('../utils/email');
+const { sendSMS } = require('../utils/sms');
 
 exports.createBin = async (req, res, next) => {
   try {
@@ -45,14 +46,17 @@ exports.updateBin = async (req, res, next) => {
     if (update.currentHeight != null) { // go to email and socketio only if there is an update in currentHeight
       const { currentHeight, maxHeight, assignedTo, location } = bin;
       if (currentHeight >= maxHeight) {
-        const msg = `<p>Hello, <strong>${assignedTo.name}</strong></p>
-                    <p>Bin <strong>${bin._id.toString().slice(-6).toUpperCase()}</strong> is full.</>
+        const shortBinId = bin._id.toString().slice(-6).toUpperCase();
+        const smsMsg = `Hello ${assignedTo.name},\nBin ${shortBinId} is full.\nLocation: ${location}\nPlease empty it.\nRegards,\nInteractive WasteBin Team.`;
+        sendSMS(assignedTo.phoneNo, smsMsg);
+        const emailMsg = `<p>Hello, <strong>${assignedTo.name}</strong></p>
+                    <p>Bin <strong>${shortBinId}</strong> is full.</>
                     <p>Location: ${location}</p>
                     <p>Please empty it.</p>
                     <p>Regards,</b></p>
-                    <p><b>Interactive WasteBin Team</b></p>`;
+                    <p><b>Interactive WasteBin Team.</b></p>`;
         const title = 'Bin Full';
-        // sendEmail(assignedTo.email, title, msg);
+        // sendEmail(assignedTo.email, title, emailMsg);
       }
       res.locals.sockdata = {
         binId: req.params.id, currentHeight, maxHeight,
