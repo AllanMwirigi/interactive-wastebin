@@ -1,24 +1,46 @@
 from gpiozero import DistanceSensor
 from time import sleep
+from statistics import mean
+import os
+import requests
+from dotenv import load_dotenv
+load_dotenv()
 
 sensor = DistanceSensor(echo=18, trigger=17)
+BACKEND_API_URL = os.getenv("BACKEND_API_URL")
+
 # TODO: should get an average of a number of measurements before sending, to account for the inconsistent values that come up occassionally
 
 def computeHeight():
     # print('Starting ultrasonic')
     counter = 0
-    measured = None
-    while counter < 7:
+    measurements = []
+    while counter < 4:
         value = sensor.distance * 100
         print('Distance: ', value, 'cm')
-        if value > 0 and value < 95: # weird values that come up sometimes
-            measured = value
+        if value > 0 and value < 50: # weird values that come up sometimes
+            measurements.append(value)
             counter += 1
         sleep(1)
     
-    if measured is not None:
+    if len(measurements) > 0:
+        measured = round(mean(measurements), 2)
         print('Ultrasonic Height: ', measured, 'cm')
-        # TODO: send to backend
+        payload = { 'currentHeight': measured }
+        requests.patch(BACKEND_API_URL+'/bins/618292d613753dcf121a496c', data=payload)
+
+def computeHeightMock():
+    counter = 0
+    while counter <= 4:
+        value = counter * 15
+        print('Distance: ', value, 'cm')
+        payload = { 'currentHeight': value }
+        response = requests.patch(BACKEND_API_URL+'/bins/618292d613753dcf121a496c', data=payload)
+        print(f'response {response.status_code}')
+        counter += 1
+        sleep(5)
+
+# computeHeightMock()     
 
 # import RPi.GPIO as GPIO
 # import time

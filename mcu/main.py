@@ -37,8 +37,7 @@ pir.when_motion = on_motion
 # compute volume from ultrasonic sensor on separate thread
 
 tl = Timeloop()
-
-@tl.job(interval=timedelta(minutes=0.5))
+@tl.job(interval=timedelta(minutes=0.1))
 def compute_height_every_2min():
     ultrasonic.computeHeight()
 
