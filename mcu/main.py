@@ -39,15 +39,15 @@ pir.when_motion = on_motion
 
 tl = Timeloop()
 
-@tl.job(interval=timedelta(minutes=0.1))
+@tl.job(interval=timedelta(minutes=0.15))
 def compute_height_every_2min():
     ultrasonic.computeHeight()
 
-@tl.job(interval=timedelta(minutes=10))
-def get_location_every_10min():
-    gps.getLocation()
+# @tl.job(interval=timedelta(minutes=10))
+# def get_location_every_10min():
+#     gps.getLocation()
 
-# tl.start() # starts timeloop on separate thread
+tl.start() # starts timeloop on separate thread
 # tl.start(block=True) # starts timeloop on main thread
 
 def signal_handler(signum, frame):

@@ -50,7 +50,7 @@ export default function CardTable({ color, content, list }) {
       const { _id, crossSectionArea, maxHeight, currentHeight, lastEmptied, location, assignedTo } = bin;
       const maxVolume = crossSectionArea * maxHeight;
       let currentVolume = crossSectionArea * currentHeight;
-      currentVolume = Math.min(currentVolume, maxVolume);
+      currentVolume = Math.ceil(Math.min(currentVolume, maxVolume));
       let percentage = Math.ceil((currentHeight/maxHeight)*100);
       percentage = Math.min(percentage, 100);
       const { volumeColor, badgeColor } = getProgressColors(percentage);

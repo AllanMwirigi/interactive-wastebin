@@ -3,6 +3,8 @@ const Bin = require('./Bin');
 const { sendEmail } = require('../utils/email');
 const { sendSMS } = require('../utils/sms');
 
+const alertSent = false
+
 exports.createBin = async (req, res, next) => {
   try {
     const maxHeight = Math.ceil(0.81 * req.body.height);
@@ -37,18 +39,26 @@ exports.getBin = async (req, res, next) => {
 exports.updateBin = async (req, res, next) => {
   try {
     // eslint-disable-next-line camelcase
-    const update  = req.body;
+    // let currentHeight = null;
+    const maxH = 25;
+    const update = req.body;
+    const { measuredHeight } = update;
+    if (measuredHeight != null) {
+      update['currentHeight'] = maxH - (0.81 * measuredHeight);
+    }
+    // const update  = { ...req.body, currentHeight:  };
     const bin = await Bin.findOneAndUpdate({ _id: req.params.id }, update, { new: true }).populate('assignedTo').lean().exec();
     if (!bin) {
       res.status(404).json({ message: 'No bin matches that id' });
       return;
     }
-    if (update.currentHeight != null) { // go to email and socketio only if there is an update in currentHeight
+    if (update.currentHeight != null && alertSent == false) { // go to email and socketio only if there is an update in currentHeight
       const { currentHeight, maxHeight, assignedTo, location } = bin;
-      if (currentHeight >= maxHeight) {
+      if (currentHeight >= maxHeight && !alertSent) {
         const shortBinId = bin._id.toString().slice(-6).toUpperCase();
         const smsMsg = `Hello ${assignedTo.name},\nBin ${shortBinId} is full.\nLocation: ${location}\nPlease empty it.\nRegards,\nInteractive WasteBin Team.`;
         sendSMS(assignedTo.phoneNo, smsMsg);
+        
         const emailMsg = `<p>Hello, <strong>${assignedTo.name}</strong></p>
                     <p>Bin <strong>${shortBinId}</strong> is full.</>
                     <p>Location: ${location}</p>
@@ -56,7 +66,8 @@ exports.updateBin = async (req, res, next) => {
                     <p>Regards,</b></p>
                     <p><b>Interactive WasteBin Team.</b></p>`;
         const title = 'Bin Full';
-        // sendEmail(assignedTo.email, title, emailMsg);
+        sendEmail(assignedTo.email, title, emailMsg);
+        alertSent = true;
       }
       res.locals.sockdata = {
         binId: req.params.id, currentHeight, maxHeight,
