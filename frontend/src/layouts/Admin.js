@@ -35,7 +35,8 @@ export default function Admin() {
   const [userList, setUserList] = useState([]);
   const [binList, setBinList] = useState([]);
   const [socketIoBinUpdate, setSocketIoBinUpdate] = useState();
-  const [location, setLocation] = useState({ lat: "-1.2976128", lng: "36.7951872" })
+  // const [location, setLocation] = useState({ lat: "-1.096217218417874", lng: "37.01381516391068" }) // elb
+  const [location, setLocation] = useState({ lat: "-1.0955025502207016", lng: "37.014134097040596" }) // emb
 
   /**
    * NOTE: a functional component does not have a render function, the component itself, with everything defined in it being 
@@ -103,7 +104,7 @@ export default function Admin() {
   }
 
   const initSocketIo = () => {
-    socketIo.on(constants.SOCKETIO_EVENT_BIN_UPDATED, ({ binId, currentHeight, maxHeight }) => {
+    socketIo.on(constants.SOCKETIO_EVENT_BIN_UPDATED, ({ binId, currentHeight, maxHeight, lat, lng, lastEmptied }) => {
       console.log('SOCKETIO_EVENT_BIN_UPDATED')
       // TODO: probably track previous currentHeight to prevent multiple calls to this
       setBinList(oldList => {
@@ -133,6 +134,16 @@ export default function Admin() {
         // setBinCount(oldCount => oldCount + 1);
       }
       // TODO: reset binCount from lastEmptied
+      else if (lastEmptied != null) {
+        setBinCountSet(oldSet => {
+          oldSet.delete(binId)
+          return oldSet;
+        });
+      }
+
+      // if (lat != null && lng != null) {
+      //  setLocation({ lat, lng });
+      // }
     });
   }
 

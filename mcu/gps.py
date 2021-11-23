@@ -14,7 +14,7 @@ def getLocation():
 
     # NOTE: need to be outside for the sensor to connect to satellites
     # The TX pin of the module is connected to the GPIO15 (RX) pin. 
-    while True: 
+    while True:
         port="/dev/ttyAMA0"
         ser=serial.Serial(port,baudrate=9600,timeout=0.5)
         dataout =pynmea2.NMEAStreamReader()
@@ -32,9 +32,11 @@ def getLocation():
                 counter += 1
             if counter == 5:
                 payload = { 'lat': lat, 'lng': lng }
-                response = requests.patch(BACKEND_API_URL+'/bins/618292d613753dcf121a496c', data=payload)
-                print(f'response {response.status_code}')
-                break
+                # response = requests.patch(BACKEND_API_URL+'/bins/618292d613753dcf121a496c', data=payload)
+                # print(f'response {response.status_code}')
+                # break
+
+getLocation()
 
 # ser = serial.Serial('/dev/ttyAMA0', baudrate=9600, timeout=5.0)
 # sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))

@@ -11,6 +11,8 @@ const binSchema = new Schema({
   location: { type: String, required: true },
   maxHeight: { type: Number, required: true }, // by default will be 81% of height
   currentHeight: { type: Number, default: 0 },
+  currentHeight1: { type: Number, default: 0 },
+  currentHeight2: { type: Number, default: 0 },
   lastEmptied: { type: Date, default: null },
   assignedTo: { type: Schema.Types.ObjectId, ref: 'User' },
   lat: { type: Number },

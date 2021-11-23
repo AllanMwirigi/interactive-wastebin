@@ -3,11 +3,12 @@ const Bin = require('./Bin');
 const { sendEmail } = require('../utils/email');
 const { sendSMS } = require('../utils/sms');
 
-const alertSent = false
+let alertSent = false;
+const maxFactor = 0.62 // 0.81
 
 exports.createBin = async (req, res, next) => {
   try {
-    const maxHeight = Math.ceil(0.81 * req.body.height);
+    const maxHeight = Math.ceil(maxFactor * req.body.height);
     const bin = new Bin({ ...req.body, maxHeight });
     const doc = await bin.save();
     // eslint-disable-next-line no-underscore-dangle
@@ -40,11 +41,17 @@ exports.updateBin = async (req, res, next) => {
   try {
     // eslint-disable-next-line camelcase
     // let currentHeight = null;
-    const maxH = 25;
+    // NOTE: as the bin fills up, the height decreases. Hv, the progress on the frontend increases
+    // const maxH = maxFactor * 26; // TODO: query this value. this should not be hardcoded
+    const height = 26; // full height of bin
     const update = req.body;
-    const { measuredHeight } = update;
+    const { measuredHeight, lat, lng } = update;
+    // const { measuredHeight1, measuredHeight2, lat, lng } = update;
     if (measuredHeight != null) {
-      update['currentHeight'] = maxH - (0.81 * measuredHeight);
+      // update['currentHeight'] = maxH - (maxFactor * measuredHeight);
+      update['currentHeight'] = height - measuredHeight;
+      // update['currentHeight1'] = maxH - (0.81 * measuredHeight);
+      // update['currentHeight2'] = maxH - (0.81 * measuredHeight);
     }
     // const update  = { ...req.body, currentHeight:  };
     const bin = await Bin.findOneAndUpdate({ _id: req.params.id }, update, { new: true }).populate('assignedTo').lean().exec();
@@ -70,7 +77,7 @@ exports.updateBin = async (req, res, next) => {
         alertSent = true;
       }
       res.locals.sockdata = {
-        binId: req.params.id, currentHeight, maxHeight,
+        binId: req.params.id, currentHeight, maxHeight, lat, lng
       };
       next();
     } else {

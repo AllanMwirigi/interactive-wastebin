@@ -48,16 +48,16 @@ export default function CardTable({ color, content, list }) {
   } else {
     binRows = list.map((bin) => {
       const { _id, crossSectionArea, maxHeight, currentHeight, lastEmptied, location, assignedTo } = bin;
-      const maxVolume = crossSectionArea * maxHeight;
+      const maxVolume = Math.ceil(crossSectionArea * maxHeight);
       let currentVolume = crossSectionArea * currentHeight;
-      currentVolume = Math.ceil(Math.min(currentVolume, maxVolume));
+      currentVolume = Math.ceil(Math.max(Math.min(currentVolume, maxVolume), 0));
       let percentage = Math.ceil((currentHeight/maxHeight)*100);
-      percentage = Math.min(percentage, 100);
+      percentage = Math.max(Math.min(percentage, 100), 0);
       const { volumeColor, badgeColor } = getProgressColors(percentage);
 
       return (
         
-        <tr key={ _id } onClick={(_event) => viewBin(bin)}>
+        <tr key={ _id }>
           <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 text-left flex items-center">
             <Link to={{ pathname: "/admin/bin", state: {bin}}}>
               <span

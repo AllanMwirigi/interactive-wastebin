@@ -1,6 +1,6 @@
 import MapExample from 'components/Maps/MapExample';
 import { DataContext } from 'context/DataContext';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import { getProgressColors } from 'utils/utils';
 
@@ -9,13 +9,14 @@ export function BinDetail() {
   const { bin } = useLocation().state;
   const { socketIoBinUpdate } = useContext(DataContext);
   const { crossSectionArea, maxHeight, currentHeight, location, lastEmptied, assignedTo } = bin;
-  const maxVolume = crossSectionArea * maxHeight;
-  const [currentVolume, setCurrentVolume] = useState(Math.min((crossSectionArea * currentHeight), maxVolume));
-  const [percentage, setPercentage] = useState(Math.min(Math.ceil((currentHeight/maxHeight)*100), 100));
+  const maxVolume = Math.ceil(crossSectionArea * maxHeight);
+  const [currentVolume, setCurrentVolume] = useState( Math.ceil( Math.max( Math.min( crossSectionArea * currentHeight, maxVolume ), 0 )));
+  const [percentage, setPercentage] = useState( Math.ceil( Math.max( Math.min( (currentHeight/maxHeight)*100, 100), 0) ) );
   const binShortId = bin._id.slice(-6).toUpperCase();
   const { volumeColor, badgeColor } = getProgressColors(percentage);
   const [volumeProgressColor, setVolumeProgressColor] = useState(volumeColor);
   const [volumeBadgeColor, setVolumeBadgeColor] = useState(badgeColor);
+  // TODO: IMPORTANT!! - react prevent child component (Map) rerender https://stackoverflow.com/questions/64841680/prevent-child-rerendering-if-parent-is-rerendered-using-hooks
   // let currentVolume = length * width * currentHeight;
   // currentVolume = Math.min(currentVolume, maxVolume);
   // let percentage = Math.ceil((currentHeight/maxHeight)*100);
@@ -27,7 +28,7 @@ export function BinDetail() {
       if (bin._id === binId) {
         bin.currentHeight = currentHeight;
         let newCurrentVolume = crossSectionArea * currentHeight;
-        newCurrentVolume = Math.min(newCurrentVolume, maxVolume);
+        newCurrentVolume = Math.ceil(Math.min(newCurrentVolume, maxVolume));
         let newPercentage = Math.ceil((currentHeight/maxHeight)*100);
         newPercentage = Math.min(newPercentage, 100);
         setCurrentVolume(newCurrentVolume);
@@ -40,7 +41,7 @@ export function BinDetail() {
     
   }, [bin, socketIoBinUpdate]);
 
-  return(
+  return( 
     <>
       <div
         className={
@@ -57,16 +58,16 @@ export function BinDetail() {
           </div>
           <div>
           <div className="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-            Location: { location }
+            Location: <strong>{ location }</strong>
           </div>
           <div className="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-            Last Emptied: { lastEmptied == null ? 'Never' : lastEmptied }
+            Last Emptied: <strong>{ lastEmptied == null ? 'Never' : lastEmptied }</strong>
           </div>
           <div className="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-            Assigned To: { assignedTo == null ? 'N/A' : assignedTo.name }
+            Assigned To: <strong>{ assignedTo == null ? 'N/A' : assignedTo.name }</strong>
           </div>
           <div className="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-            <i className={`fas fa-circle ${volumeBadgeColor} mr-2`}></i> Current Volume: {currentVolume}/{maxVolume} cm<sup>3</sup>
+            <i className={`fas fa-circle ${volumeBadgeColor} mr-2`}></i> Current Volume: <strong>{currentVolume}/{maxVolume} cm<sup>3</sup></strong>
           </div>
           <div className="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
             <div className="flex items-center">
@@ -79,7 +80,7 @@ export function BinDetail() {
                   ></div>
                 </div>
               </div>
-              <span className="ml-2">Percentage: {percentage}%</span>
+              <span className="ml-2">{percentage}% Full</span>
             </div>
             {/* TODO: add time since full below */}
           </div>
@@ -90,7 +91,7 @@ export function BinDetail() {
       <div className="flex flex-wrap">
         <div className="w-full px-4">
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
-            <MapExample binShortId={binShortId}/>
+            <MapExample binShortId={binShortId} />
           </div>
         </div>
       </div>
