@@ -2,6 +2,7 @@ import MapExample from 'components/Maps/MapExample';
 import { DataContext } from 'context/DataContext';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
+import { convertISOToLocalTime } from 'utils/utils';
 import { getProgressColors } from 'utils/utils';
 
 export function BinDetail() {
@@ -61,7 +62,7 @@ export function BinDetail() {
             Location: <strong>{ location }</strong>
           </div>
           <div className="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-            Last Emptied: <strong>{ lastEmptied == null ? 'Never' : lastEmptied }</strong>
+            Last Emptied: <strong>{ lastEmptied == null ? 'Never' : convertISOToLocalTime(lastEmptied) }</strong>
           </div>
           <div className="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
             Assigned To: <strong>{ assignedTo == null ? 'N/A' : assignedTo.name }</strong>

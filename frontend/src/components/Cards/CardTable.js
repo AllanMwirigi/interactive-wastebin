@@ -9,6 +9,7 @@ import { BinsService } from "services/services";
 import TableDropdown from "components/Dropdowns/TableDropdown.js";
 import { Link, useHistory } from "react-router-dom";
 import { getProgressColors } from "utils/utils";
+import { convertISOToLocalTime } from "utils/utils";
 
 export default function CardTable({ color, content, list }) {
 
@@ -97,7 +98,7 @@ export default function CardTable({ color, content, list }) {
             { location }
           </td>
           <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
-            { lastEmptied == null ? 'Never' : lastEmptied }
+            { lastEmptied == null ? 'Never' : convertISOToLocalTime(lastEmptied) }
           </td>
           <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
             <i className={`fas fa-circle ${badgeColor} mr-2`}></i> {currentVolume}/{maxVolume} cm<sup>3</sup>
