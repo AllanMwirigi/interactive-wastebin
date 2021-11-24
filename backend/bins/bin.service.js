@@ -63,13 +63,15 @@ exports.updateBin = async (req, res, next) => {
       const { currentHeight, maxHeight, assignedTo, location } = bin;
       if (currentHeight >= maxHeight && !alertSent) {
         const shortBinId = bin._id.toString().slice(-6).toUpperCase();
-        const smsMsg = `Hello ${assignedTo.name},\nBin ${shortBinId} is full.\nLocation: ${location}\nPlease empty it.\nRegards,\nInteractive WasteBin Team.`;
+        const linkTxt1 = "Follow this link for more details - https://interactivewastebin.surge.sh"
+        const smsMsg = `Hello ${assignedTo.name},\nBin ${shortBinId} is full.\nLocation: ${location}\nPlease empty it.\n${linkTxt1}\nRegards,\nInteractive WasteBin Team.`;
         sendSMS(assignedTo.phoneNo, smsMsg);
         
         const emailMsg = `<p>Hello, <strong>${assignedTo.name}</strong></p>
                     <p>Bin <strong>${shortBinId}</strong> is full.</>
                     <p>Location: ${location}</p>
                     <p>Please empty it.</p>
+                    <p><a href="https://interactivewastebin.surge.sh" target="_blank">Follow this link for more details</a></p>
                     <p>Regards,</b></p>
                     <p><b>Interactive WasteBin Team.</b></p>`;
         const title = 'Bin Full';
@@ -88,20 +90,27 @@ exports.updateBin = async (req, res, next) => {
   }
 };
 
+function genEmailLinkTxt() {
+  if (process.NODE_ENV != 'development') {
+    return `<p><a href="https://interactivewastebin.surge.sh" target="_blank">Follow this link for more details</a></p>`
+  }
+  return ``;
+}
+
 exports.setBinEmptied = async (req, res, next) => {
   try {
-    const update = req.body;
-    update.lastEmptied = new Date().toISOString();
+    const update = { currentHeight: 0, lastEmptied: new Date().toISOString() };
+    // update.lastEmptied = new Date().toISOString();
     const result = await Bin.updateOne({ _id: req.params.id }, update).exec();
     if (result.n === 0) {
       res.status(404).json({ message: 'No bin matches that id' });
       return;
     }
     res.sendStatus(201);
-    const msg = `<p>Bin ${update.bin_code} has been emptied.</>
-                <p>Great work</p>
-                <p>Regards, <b>PingBin Team</b></p>`;
-    sendEmail(req.headers.userid, 'Bin Emptied', msg);
+    // const msg = `<p>Bin ${update.bin_code} has been emptied.</>
+    //             <p>Great work</p>
+    //             <p>Regards, <b>PingBin Team</b></p>`;
+    // sendEmail(req.headers.userid, 'Bin Emptied', msg);
   } catch (error) {
     next(error);
   }

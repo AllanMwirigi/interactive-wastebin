@@ -1,13 +1,36 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+
+import { BinsService } from "services/services";
+
 
 // components
 
 import TableDropdown from "components/Dropdowns/TableDropdown.js";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { getProgressColors } from "utils/utils";
 
 export default function CardTable({ color, content, list }) {
+
+  let binService = useRef();
+  const history = useHistory();
+
+  useEffect(() => {
+    const authToken = sessionStorage.getItem('authToken')
+    const { userId } = JSON.parse(sessionStorage.getItem('userData'));
+    binService.current = new BinsService(authToken, userId);
+  }, []);
+
+  const setBinEmptied = async (binId) => {
+    // e.preventDefault();
+    try {
+      await binService.current.setBinEmptied(binId);
+      history.go(0);
+    } catch (error) {
+      alert('An error occurred');
+      console.error(error);
+    }   
+  }
 
   const colHeaders = content.headers.map((col) =>
     <th key={col}
@@ -97,7 +120,7 @@ export default function CardTable({ color, content, list }) {
             { assignedTo == null ? 'N/A' : assignedTo.name }
           </td>
           <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 text-right">
-            <TableDropdown />
+            <TableDropdown binId={_id} setBinEmptied={setBinEmptied}/>
           </td>
         </tr>
       );

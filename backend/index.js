@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
   originsList = ["http://localhost:3000"];
   app.use(morgan('dev'));
 } else {
-  originsList = []; // TODO: add prod url here
+  originsList = ["https://interactivewastebin.surge.sh"]; // TODO: add prod url here
 }
 // set up cors
 const corsOptions = {
