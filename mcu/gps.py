@@ -36,7 +36,7 @@ def getLocation():
                 # print(f'response {response.status_code}')
                 # break
 
-getLocation()
+# getLocation()
 
 # ser = serial.Serial('/dev/ttyAMA0', baudrate=9600, timeout=5.0)
 # sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
