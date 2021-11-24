@@ -26,7 +26,9 @@ export default function CardTable({ color, content, list }) {
     // e.preventDefault();
     try {
       await binService.current.setBinEmptied(binId);
-      history.go(0);
+      history.push('/');
+      // history.go(0); // breaks in production (blank page) probably due to Surge 200.html
+
     } catch (error) {
       alert('An error occurred');
       console.error(error);

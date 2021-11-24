@@ -36,12 +36,14 @@ const logger = createLogger({
   exitOnError: false // do not exit on handled exceptions
 });
 
-// If we're not in production then log to the `console`
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(consoleTransport);
-} else {
-  logger.add(fileTransport); // otherwise log to file
-}
+logger.add(consoleTransport);
+
+// // If we're not in production then log to the `console`
+// if (process.env.NODE_ENV !== 'production') {
+//   logger.add(consoleTransport);
+// } else {
+//   logger.add(fileTransport); // otherwise log to file
+// }
 
 // create a stream object with a 'write' function that will be used by `morgan`
 // logger.stream = {

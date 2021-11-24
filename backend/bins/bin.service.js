@@ -21,7 +21,7 @@ exports.createBin = async (req, res, next) => {
 
 exports.getAllBins = async (req, res, next) => {
   try {
-    const list = await Bin.find({}).populate('assignedTo').lean().exec();
+    const list = await Bin.find({}).populate('assignedTo', '-password').lean().exec();
     res.status(200).json(list);
   } catch (error) {
     next(error);
@@ -63,7 +63,7 @@ exports.updateBin = async (req, res, next) => {
       const { currentHeight, maxHeight, assignedTo, location } = bin;
       if (currentHeight >= maxHeight && !alertSent) {
         const shortBinId = bin._id.toString().slice(-6).toUpperCase();
-        const linkTxt1 = "Follow this link for more details - https://interactivewastebin.surge.sh"
+        const linkTxt1 = "Follow this link for more details: https://interactivewastebin.surge.sh"
         const smsMsg = `Hello ${assignedTo.name},\nBin ${shortBinId} is full.\nLocation: ${location}\nPlease empty it.\n${linkTxt1}\nRegards,\nInteractive WasteBin Team.`;
         sendSMS(assignedTo.phoneNo, smsMsg);
         
@@ -99,13 +99,14 @@ function genEmailLinkTxt() {
 
 exports.setBinEmptied = async (req, res, next) => {
   try {
-    const update = { currentHeight: 0, lastEmptied: new Date().toISOString() };
+    const update = { currentHeight: 0, lastEmptied: new Date().toISOString() }; // 2021-11-24T14:45:41.527+00:00
     // update.lastEmptied = new Date().toISOString();
     const result = await Bin.updateOne({ _id: req.params.id }, update).exec();
     if (result.n === 0) {
       res.status(404).json({ message: 'No bin matches that id' });
       return;
     }
+    alertSent = false;
     res.sendStatus(201);
     // const msg = `<p>Bin ${update.bin_code} has been emptied.</>
     //             <p>Great work</p>

@@ -35,8 +35,9 @@ export default function Admin() {
   const [userList, setUserList] = useState([]);
   const [binList, setBinList] = useState([]);
   const [socketIoBinUpdate, setSocketIoBinUpdate] = useState();
+  const [location, setLocation] = useState({ lat: "-1.0963175644254826", lng: "37.01381902331337" }) // elb
   // const [location, setLocation] = useState({ lat: "-1.096217218417874", lng: "37.01381516391068" }) // elb
-  const [location, setLocation] = useState({ lat: "-1.0955025502207016", lng: "37.014134097040596" }) // emb
+  // const [location, setLocation] = useState({ lat: "-1.0955025502207016", lng: "37.014134097040596" }) // emb
 
   /**
    * NOTE: a functional component does not have a render function, the component itself, with everything defined in it being 

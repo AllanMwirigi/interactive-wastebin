@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config('../.env');
+const logger = require('../utils/winston');
 
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
@@ -13,11 +14,13 @@ module.exports = (req, res, next) => {
         .status(401)
         .json({
           code: 401,
-          message: 'unauthorized'
+          message: 'Unauthorized'
         });
     }
     next(); // continue execution if user id matches id in token
   } catch (error) {
-    next(error); // channel errors to logger & handler in app.js
+    // next(error); // channel errors to logger & handler in app.js
+    res.sendStatus(401);
+    logger.error(`${req.url} | ${error.message}`);
   }
 };
